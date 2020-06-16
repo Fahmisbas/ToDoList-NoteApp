@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fahmisbas.notes.R
 import com.fahmisbas.notes.foundations.BaseRecyclerAdapter
 import com.fahmisbas.notes.models.Note
+import com.fahmisbas.notes.views.NoteView
 import kotlinx.android.synthetic.main.item_note.view.*
 
 class NoteAdapter(
@@ -18,7 +19,7 @@ class NoteAdapter(
 
     class ViewHolder(view: View) : BaseViewHolder<Note>(view) {
         override fun onBind(note: Note) {
-            view.titleView.text = note.description
+            (view as NoteView).initViews(note)
         }
     }
 }

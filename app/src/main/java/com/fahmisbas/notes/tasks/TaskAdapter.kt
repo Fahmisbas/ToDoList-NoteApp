@@ -3,13 +3,12 @@ package com.fahmisbas.notes.tasks
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.fahmisbas.notes.R
 import com.fahmisbas.notes.foundations.BaseRecyclerAdapter
 import com.fahmisbas.notes.models.Task
+import com.fahmisbas.notes.views.TodoView
 import kotlinx.android.synthetic.main.item_task.view.*
-import kotlinx.android.synthetic.main.view_todo.view.*
 
 class TaskAdapter(
      taskList : MutableList<Task> = mutableListOf()
@@ -22,9 +21,8 @@ class TaskAdapter(
         override fun onBind(data : Task) {
             view.titleView.text = data.title
             data.toDos.forEach {todo ->
-                val todoView = LayoutInflater.from(view.context).inflate(R.layout.view_todo, view.todoContainer,false).apply {
-                    descriptionView.text = todo.description
-                    completeCheckBox.isChecked = todo.isComplete
+                val todoView = (LayoutInflater.from(view.context).inflate(R.layout.view_todo, view.todoContainer,false) as TodoView) .apply {
+                   initViews(todo)
                 }
                 view.todoContainer.addView(todoView)
             }
