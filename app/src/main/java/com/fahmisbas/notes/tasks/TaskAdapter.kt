@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fahmisbas.notes.R
 import com.fahmisbas.notes.foundations.BaseRecyclerAdapter
 import com.fahmisbas.notes.models.Task
+import com.fahmisbas.notes.views.TaskView
 import com.fahmisbas.notes.views.TodoView
 import kotlinx.android.synthetic.main.item_task.view.*
 
@@ -19,13 +20,7 @@ class TaskAdapter(
 
     class ViewHolder(view : View) : BaseViewHolder<Task>(view) {
         override fun onBind(data : Task) {
-            view.titleView.text = data.title
-            data.toDos.forEach {todo ->
-                val todoView = (LayoutInflater.from(view.context).inflate(R.layout.view_todo, view.todoContainer,false) as TodoView) .apply {
-                   initViews(todo)
-                }
-                view.todoContainer.addView(todoView)
-            }
+            (view as TaskView).initView(data)
         }
     }
 }
