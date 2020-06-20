@@ -1,10 +1,14 @@
 package com.fahmisbas.notes.tasks
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fahmisbas.notes.R
 import com.fahmisbas.notes.models.Task
@@ -13,32 +17,51 @@ import kotlinx.android.synthetic.main.fragment_tasks_list.*
 
 class TasksListFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    lateinit var viewModel: TaskViewModel
+    lateinit var contentView : TaskListView
+    lateinit var touchActionDelegate: TasksListFragment.TouchActionDelegate
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.let {
+            if (it is TasksListFragment.TouchActionDelegate) {
+                touchActionDelegate = it
+            }
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_tasks_list, container, false)
+        return inflater.inflate(R.layout.fragment_tasks_list, container, false).apply {
+            contentView = this as TaskListView
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        bindViewModel()
+        setContentView()
+    }
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TaskAdapter(mutableListOf(
-            Task("Testing One", mutableListOf(
-                ToDo("Test One",true),
-                ToDo("Test Two")
-            )),
-            Task("Testing Two")
-        ))
-        recyclerView.adapter = adapter
+    private fun setContentView() {
+        contentView.initView(touchActionDelegate,viewModel)
+    }
+
+    private fun bindViewModel() {
+        viewModel = ViewModelProviders.of(this).get(TaskViewModel::class.java)
+        viewModel.taskListLiveData.observe(viewLifecycleOwner, Observer { taskList ->
+            contentView.updateList(taskList)
+        })
     }
 
     companion object {
         fun newInstance() = TasksListFragment()
     }
+    
+    interface TouchActionDelegate {
+        fun onAddButtonClicked(value : String)
+    }
+    
 }

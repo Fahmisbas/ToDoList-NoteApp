@@ -7,20 +7,39 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fahmisbas.notes.R
 import com.fahmisbas.notes.foundations.BaseRecyclerAdapter
 import com.fahmisbas.notes.models.Task
+import com.fahmisbas.notes.navigation.NavigationActivity
 import com.fahmisbas.notes.views.TaskView
-import com.fahmisbas.notes.views.TodoView
-import kotlinx.android.synthetic.main.item_task.view.*
+import kotlinx.android.synthetic.main.view_add_button.view.*
 
 class TaskAdapter(
-     taskList : MutableList<Task> = mutableListOf()
-) : BaseRecyclerAdapter<Task>(taskList){
+    taskList: MutableList<Task> = mutableListOf(),
+    val touchActionDelegate: TasksListFragment.TouchActionDelegate,
+    val dataActionDelegate : TaskListViewContract
+    ) : BaseRecyclerAdapter<Task>(taskList) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_task,parent,false))
+        if (viewType == TYPE_INFO) {
+            TaskViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false))
+        } else {
+            AddButtonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_add_button,parent,false))
+        }
 
-    class ViewHolder(view : View) : BaseViewHolder<Task>(view) {
-        override fun onBind(data : Task) {
-            (view as TaskView).initView(data)
+    inner class TaskViewHolder(view: View) : BaseViewHolder<Task>(view) {
+        override fun onBind(data: Task,listIndex : Int) {
+            (view as TaskView).initView(data) { toDoIndex,isChecked ->
+                dataActionDelegate.onToDoUpdated(listIndex,toDoIndex,isChecked)
+            }
         }
     }
+
+    inner class AddButtonViewHolder(view: View) : BaseRecyclerAdapter.AddButtonViewHolder(view) {
+        override fun onBind(data: Unit,listIndex: Int) {
+            view.buttonText.text = view.context.getString(R.string.add_button_task)
+            view.setOnClickListener {
+                touchActionDelegate.onAddButtonClicked(NavigationActivity.FRAGMENT_VALUE_TASK)
+            }
+        }
+
+    }
+
 }

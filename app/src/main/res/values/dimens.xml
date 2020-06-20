@@ -3,6 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="default_elevation">2dp</dimen>
+
     <dimen name="simple_item_view_height">128dp</dimen>
     <dimen name="item_margin_default">16dp</dimen>
+    <dimen name="item_margin_small">8dp</dimen>
+
+    <dimen name="text_size_xl_large">32sp</dimen>
+    <dimen name="text_size_large">24sp</dimen>
+    <dimen name="text_size_medium">12sp</dimen>
+
+
 </resources>
