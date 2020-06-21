@@ -8,26 +8,14 @@ import com.fahmisbas.notes.models.ToDo
 
 class TaskViewModel : ViewModel(),TaskListViewContract {
 
+    private val model : TaskModel = TaskModel()
+
     private val _taskListLiveData : MutableLiveData<MutableList<Task>> = MutableLiveData()
     val taskListLiveData : LiveData<MutableList<Task>> = _taskListLiveData
 
     init {
-        _taskListLiveData.postValue(getFakeData())
+        _taskListLiveData.postValue(model.getFakeData())
     }
-
-    fun getFakeData(): MutableList<Task> = (mutableListOf(
-        Task(
-            "Testing One", mutableListOf(
-                ToDo("Test One", true),
-                ToDo("Test Two")
-            )
-        ),
-        Task("Testing Two"),
-        Task("Testing Three", mutableListOf(
-            ToDo("Test A"),
-            ToDo("Test B")
-        ))
-    ))
 
     override fun onToDoUpdated(taskIndex: Int, todoIndex: Int, isComplete: Boolean) {
         _taskListLiveData.value?.get(taskIndex)?.toDos?.get(todoIndex)?.isComplete = isComplete

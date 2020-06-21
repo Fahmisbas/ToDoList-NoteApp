@@ -18,7 +18,7 @@ class NotesListFragment : Fragment() {
 
     lateinit var viewModel: NoteViewModel
     lateinit var touchActionDelegate: NotesListFragment.TouchActionDelegate
-    lateinit var contentView : NoteListView
+    lateinit var contentView: NoteListView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -45,11 +45,11 @@ class NotesListFragment : Fragment() {
     }
 
     private fun setContentView() {
-        contentView.initViews(touchActionDelegate,viewModel)
+        contentView.initViews(touchActionDelegate, viewModel)
     }
 
     private fun bindViewModel() {
-        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
         viewModel.noteListLiveData.observe(viewLifecycleOwner, Observer { noteList ->
             contentView.updateList(noteList)
         })

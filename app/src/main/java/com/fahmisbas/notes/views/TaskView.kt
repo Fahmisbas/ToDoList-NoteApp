@@ -35,7 +35,7 @@ class TaskView @JvmOverloads constructor(
         }
     }
 
-    fun isTaskComplete(): Boolean = task.toDos.filter { !it.isComplete }.isEmpty()
+    private fun isTaskComplete(): Boolean = task.toDos.filter { !it.isComplete }.isEmpty()
 
     private fun createStrikeThrough() {
         titleView.apply {

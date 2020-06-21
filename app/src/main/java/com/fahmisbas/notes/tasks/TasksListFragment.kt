@@ -50,7 +50,7 @@ class TasksListFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel = ViewModelProviders.of(this).get(TaskViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
         viewModel.taskListLiveData.observe(viewLifecycleOwner, Observer { taskList ->
             contentView.updateList(taskList)
         })
@@ -63,5 +63,4 @@ class TasksListFragment : Fragment() {
     interface TouchActionDelegate {
         fun onAddButtonClicked(value : String)
     }
-    
 }

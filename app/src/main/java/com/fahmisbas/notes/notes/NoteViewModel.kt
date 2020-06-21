@@ -7,18 +7,12 @@ import com.fahmisbas.notes.models.Note
 
 class NoteViewModel : ViewModel(),NoteListViewContract {
 
+    private val model : NoteModel = NoteModel()
+
     private val _noteListLiveData : MutableLiveData<List<Note>> = MutableLiveData()
     val noteListLiveData : LiveData<List<Note>> = _noteListLiveData
 
     init {
-        _noteListLiveData.postValue(getFakeData())
-    }
-
-    fun getFakeData() : MutableList<Note>{
-        return mutableListOf(Note("Test 1"),
-            Note("Test 2"),
-            Note("Test 3"),
-            Note("Test 4")
-        )
+        _noteListLiveData.postValue(model.getFakeData())
     }
 }

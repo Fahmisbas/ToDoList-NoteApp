@@ -24,7 +24,7 @@ class TodoView @JvmOverloads constructor(
         setupCheckStateListener(toDo, callback)
     }
 
-    fun setupCheckStateListener(todo : ToDo, callback : ((Boolean) -> Unit)? = null) {
+    private fun setupCheckStateListener(todo : ToDo, callback : ((Boolean) -> Unit)? = null) {
         completeCheckBox!!.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             todo.isComplete = isChecked
             callback?.invoke(isChecked)

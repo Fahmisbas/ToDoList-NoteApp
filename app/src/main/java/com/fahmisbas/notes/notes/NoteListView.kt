@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fahmisbas.notes.models.Note
-import kotlinx.android.synthetic.main.fragment_notes_list.*
 import kotlinx.android.synthetic.main.fragment_notes_list.view.*
 
 class NoteListView @JvmOverloads constructor(
@@ -19,16 +18,16 @@ class NoteListView @JvmOverloads constructor(
     private lateinit var dataActionDelegate : NoteListViewContract
 
     fun initViews(taDelegate : NotesListFragment.TouchActionDelegate,daDelegate : NoteListViewContract) {
-        setDelegate(taDelegate,daDelegate)
+        setUpDelegate(taDelegate,daDelegate)
         setupView()
     }
 
-    fun setDelegate(taDelegate : NotesListFragment.TouchActionDelegate,daDelegate: NoteListViewContract) {
+    private fun setUpDelegate(taDelegate : NotesListFragment.TouchActionDelegate, daDelegate: NoteListViewContract) {
         touchActionDelegate = taDelegate
         dataActionDelegate = daDelegate
     }
 
-    fun setupView() {
+    private fun setupView() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = NoteAdapter(touchActionDelegate =  touchActionDelegate,dataActionDelegate = dataActionDelegate)
         recyclerView.adapter = adapter
