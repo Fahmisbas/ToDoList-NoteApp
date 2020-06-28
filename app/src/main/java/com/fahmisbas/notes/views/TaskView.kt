@@ -25,9 +25,9 @@ class TaskView @JvmOverloads constructor(
                 initViews(toDo) {isChecked ->
                     toDoCheckCallback.invoke(toDoIndex,isChecked)
                     if (isTaskComplete()) {
-                        createStrikeThrough()
+                        this@TaskView.titleView.setStrikeThrough()
                     } else {
-                        removeStrikeThrough()
+                        this@TaskView.titleView.removeStrikeThrough()
                     }
                 }
             }
@@ -36,17 +36,4 @@ class TaskView @JvmOverloads constructor(
     }
 
     private fun isTaskComplete(): Boolean = task.toDos.filter { !it.isComplete }.isEmpty()
-
-    private fun createStrikeThrough() {
-        titleView.apply {
-            paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        }
-    }
-
-    private fun removeStrikeThrough() {
-        titleView.apply {
-            paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-        }
-    }
-
 }

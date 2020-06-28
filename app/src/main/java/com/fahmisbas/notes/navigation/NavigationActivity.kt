@@ -52,7 +52,6 @@ class NavigationActivity : AppCompatActivity(),TasksListFragment.TouchActionDele
         })
     }
 
-
     companion object {
         const val FRAGMENT_TYPE_KEY = "f_t_k"
         const val FRAGMENT_VALUE_NOTE = "f_v_n"

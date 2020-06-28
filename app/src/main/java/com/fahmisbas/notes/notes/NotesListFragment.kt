@@ -34,7 +34,7 @@ class NotesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_notes_list, container, false).apply {
-            contentView = view as NoteListView
+            contentView = this as NoteListView
         }
     }
 

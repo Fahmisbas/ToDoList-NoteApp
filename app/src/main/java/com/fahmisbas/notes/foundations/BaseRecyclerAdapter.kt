@@ -43,10 +43,8 @@ abstract class BaseRecyclerAdapter<T>(
     }
 
     class DiffUtilCallbackImpl<T>(val oldList : List<T>,val newList : List<T>) : DiffUtil.Callback() {
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            TODO("Not yet implemented")
-        }
-
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean  =
+            oldList[oldItemPosition] == newList[newItemPosition]
         override fun getOldListSize() = oldList.size
 
         override fun getNewListSize() = newList.size

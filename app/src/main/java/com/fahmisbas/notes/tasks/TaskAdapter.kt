@@ -39,7 +39,5 @@ class TaskAdapter(
                 touchActionDelegate.onAddButtonClicked(NavigationActivity.FRAGMENT_VALUE_TASK)
             }
         }
-
     }
-
 }
