@@ -14,6 +14,7 @@ import com.fahmisbas.notes.foundations.NullFieldChecker
 import com.fahmisbas.notes.foundations.StateChangeTextWatcher
 import com.fahmisbas.notes.models.Task
 import com.fahmisbas.notes.models.ToDo
+import com.fahmisbas.notes.tasks.ITaskModel
 import com.fahmisbas.notes.tasks.TaskLocalModel
 import com.fahmisbas.notes.views.CreateTodoView
 import kotlinx.android.synthetic.main.fragment_create_task.*
@@ -28,7 +29,7 @@ private const val MAX_TODO_COUNT = 5
 class CreateTaskFragment : Fragment() {
 
     @Inject
-    lateinit var model : TaskLocalModel
+    lateinit var model : ITaskModel
 
     private var listener: OnFragmentInteractionListener? = null
 

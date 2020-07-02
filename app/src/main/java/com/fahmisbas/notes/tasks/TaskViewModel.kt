@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fahmisbas.notes.foundations.ApplicationScope
 import com.fahmisbas.notes.models.Task
+import com.fahmisbas.notes.models.ToDo
 import toothpick.Toothpick
 import toothpick.config.Module
 import javax.inject.Inject
@@ -48,6 +49,7 @@ class TaskModel() : ITaskModel {
         TODO("Not yet implemented")
     }
 
-    override fun getFakeData(): MutableList<Task> = mutableListOf(Task("Test Module Task"))
+    override fun getFakeData(): MutableList<Task> = mutableListOf(Task("Test Module Task",
+        mutableListOf(ToDo("wadidaw"))))
 
 }
