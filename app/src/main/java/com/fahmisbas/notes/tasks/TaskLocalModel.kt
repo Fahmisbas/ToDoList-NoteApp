@@ -12,36 +12,36 @@ class TaskLocalModel @Inject constructor() : ITaskModel{
 
     private var databaseClient: RoomDatabaseClient = RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
 
+    override fun getFakeData(): MutableList<Task> = retrieveTask().toMutableList()
 
     override fun addTask(task: Task, callback: SuccessCallbak) {
-        Log.i("udemy",task.toString())
+        databaseClient.taskDao().addTask(task)
+        addTodosInTask(task)
         callback.invoke(true)
     }
 
     override fun updateTask(task: Task, callback: SuccessCallbak) {
-        TODO("Not yet implemented")
+        databaseClient.taskDao().updateTask(task)
+        callback.invoke(true)
+    }
+
+    override fun updateTodo(toDo: ToDo, callback: SuccessCallbak) {
+        databaseClient.taskDao().updateTodo(toDo)
+        callback.invoke(true)
     }
 
     override fun deleteTask(task: Task, callback: SuccessCallbak) {
-        TODO("Not yet implemented")
+        databaseClient.taskDao().deleteTask(task)
+        callback.invoke(true)
     }
 
-    override fun retrieveTask(): List<Task> {
-        TODO("Not yet implemented")
+    private fun addTodosInTask(task : Task) {
+        task.toDos.forEach {todo ->
+            databaseClient.taskDao().addTodo(todo)
+        }
     }
 
-    override fun getFakeData(): MutableList<Task> = (mutableListOf(
-        Task(
-            "Testing One", mutableListOf(
-                ToDo("Test One", true),
-                ToDo("Test Two")
-            )
-        ),
-        Task("Testing Two"),
-        Task("Testing Three", mutableListOf(
-            ToDo("Test A"),
-            ToDo("Test B")
-        ))
-    ))
+    override fun retrieveTask(): List<Task> = databaseClient.taskDao().retrieveTask()
+
 
 }

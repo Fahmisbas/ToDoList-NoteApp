@@ -17,14 +17,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/descriptionView"
+        android:id="@+id/titleView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/item_margin_default"
         android:layout_marginEnd="@dimen/item_margin_default"
         app:layout_constraintBottom_toBottomOf="@id/completeCheckBox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/completeCheckBox"
         app:layout_constraintTop_toTopOf="@id/completeCheckBox"
         tools:text="hello world" />

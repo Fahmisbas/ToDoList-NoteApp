@@ -1,7 +1,6 @@
 package com.fahmisbas.notes.views
 
 import android.content.Context
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,9 +16,14 @@ class TaskView @JvmOverloads constructor(
 
     lateinit var task: Task
 
-    fun initView(task: Task, toDoCheckCallback : (Int,Boolean) -> Unit) {
+    fun initView(task: Task, toDoCheckCallback : (Int,Boolean) -> Unit,deleteCallback : () -> Unit) {
         this.task = task
         titleView.text = task.title
+
+        imageButton.setOnClickListener {
+            deleteCallback.invoke()
+        }
+
         task.toDos.forEachIndexed { toDoIndex, toDo ->
             val todoView = (LayoutInflater.from(context).inflate(R.layout.view_todo, todoContainer, false) as TodoView).apply {
                 initViews(toDo) {isChecked ->

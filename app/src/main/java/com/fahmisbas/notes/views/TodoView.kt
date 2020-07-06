@@ -1,7 +1,6 @@
 package com.fahmisbas.notes.views
 
 import android.content.Context
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.CompoundButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,12 +13,11 @@ class TodoView @JvmOverloads constructor(
     defStyleAttr: Int = 1
 ) : ConstraintLayout(context,attrs,defStyleAttr) {
 
-
     fun initViews(toDo: ToDo, callback: ((Boolean) -> Unit)? = null) {
-        descriptionView.text = toDo.description
+        titleView.text = toDo.description
         completeCheckBox.isChecked = toDo.isComplete
         if (toDo.isComplete) {
-            descriptionView.setStrikeThrough()
+            titleView.setStrikeThrough()
         }
         setupCheckStateListener(toDo, callback)
     }
@@ -29,9 +27,9 @@ class TodoView @JvmOverloads constructor(
             todo.isComplete = isChecked
             callback?.invoke(isChecked)
             if (isChecked) {
-                descriptionView.setStrikeThrough()
+                titleView.setStrikeThrough()
             } else {
-                descriptionView.removeStrikeThrough()
+                titleView.removeStrikeThrough()
             }
         }
     }

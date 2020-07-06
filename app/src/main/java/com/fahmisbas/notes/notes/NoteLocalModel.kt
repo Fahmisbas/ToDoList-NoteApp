@@ -11,28 +11,30 @@ class NoteLocalModel @Inject constructor() : INoteModel {
 
     private var databaseClient: RoomDatabaseClient = RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
 
-    override fun getFakeData() : MutableList<Note>{
-        return mutableListOf(
-            Note("Test 1"),
-            Note("Test 2"),
-            Note("Test 3"),
-            Note("Test 4")
-        )
-    }
+    override fun getFakeData() : MutableList<Note> = retrieveNotes().toMutableList()
+//        return mutableListOf(
+////            Note(description = "Test 1"),
+////            Note(description ="Test 2"),
+////            Note(description ="Test 3"),
+////            Note(description ="Test 4")
+//        )
+
 
     override fun addNote(note: Note, callback: SuccessCallbak) {
+        databaseClient.noteDAO().addNote(note)
         callback.invoke(true)
     }
 
     override fun updateNote(note: Note, callback: SuccessCallbak) {
-        TODO("Not yet implemented")
+        databaseClient.noteDAO().updateNote(note)
+        callback.invoke(true)
     }
 
     override fun deleteNote(note: Note, callback: SuccessCallbak) {
-        TODO("Not yet implemented")
+        databaseClient.noteDAO().deleteNote(note)
+        callback.invoke(true)
     }
 
-    override fun retrieveNotes(): List<Note> {
-        TODO("Not yet implemented")
-    }
+    override fun retrieveNotes(): List<Note> = databaseClient.noteDAO().retrieveNotes()
+
 }

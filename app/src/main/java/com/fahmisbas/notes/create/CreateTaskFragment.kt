@@ -90,7 +90,7 @@ class CreateTaskFragment : Fragment() {
         createTask()?.let {
             model.addTask(it) {
                 // asume model always work
-                callback.invoke(true)
+                callback.invoke(it)
             }
         } ?: callback.invoke(false)
 
@@ -106,7 +106,9 @@ class CreateTaskFragment : Fragment() {
                         taskField = containerView.getChildAt(i).taskEditText.editableText?.toString()
                     } else {
                         if (!containerView.getChildAt(i).todoEditText.editableText?.toString().isNullOrEmpty()) {
-                            todoList.add(ToDo(containerView.getChildAt(i).todoEditText.editableText.toString()))
+                            todoList.add(
+                                ToDo(description = containerView.getChildAt(i).todoEditText.editableText.toString())
+                            )
                         }
                     }
                 }
@@ -122,7 +124,7 @@ class CreateTaskFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-
+            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
     }
 

@@ -1,3 +1,7 @@
 package com.fahmisbas.notes.notes
 
-interface NoteListViewContract {}
+import com.fahmisbas.notes.models.Note
+
+interface NoteListViewContract {
+    fun onDeleteNote(note : Note)
+}

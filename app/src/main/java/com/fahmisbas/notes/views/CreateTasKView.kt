@@ -13,6 +13,7 @@ class CreateTasKView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 1
 ) : LinearLayout(context,attrs,defStyleAttr), NullFieldChecker {
+
     override fun hasNullField(): Boolean = taskEditText.editableText.isNullOrEmpty()
 
 }

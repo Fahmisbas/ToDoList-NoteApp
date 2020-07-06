@@ -18,38 +18,33 @@ class TaskViewModel : ViewModel(),TaskListViewContract {
     private val _taskListLiveData : MutableLiveData<MutableList<Task>> = MutableLiveData()
     val taskListLiveData : LiveData<MutableList<Task>> = _taskListLiveData
 
-    init {
-        val taskViewModelScope = Toothpick.openScopes(ApplicationScope.scope,this)
-        taskViewModelScope.installModules(Module().apply {
-            bind(ITaskModel::class.java).toInstance(TaskModel())
-        })
-        Toothpick.inject(this,taskViewModelScope)
+    init{
+        Toothpick.inject(this,ApplicationScope.scope)
+        loadData()
+    }
+
+    fun loadData() {
         _taskListLiveData.postValue(localModel.getFakeData())
     }
 
     override fun onToDoUpdated(taskIndex: Int, todoIndex: Int, isComplete: Boolean) {
-        _taskListLiveData.value?.get(taskIndex)?.toDos?.get(todoIndex)?.isComplete = isComplete
-    }
-}
-
-class TaskModel() : ITaskModel {
-    override fun addTask(task: Task, callback: SuccessCallbak) {
-        TODO("Not yet implemented")
-    }
-
-    override fun updateTask(task: Task, callback: SuccessCallbak) {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteTask(task: Task, callback: SuccessCallbak) {
-        TODO("Not yet implemented")
+        _taskListLiveData.value?.let {
+            val todo = it[taskIndex].toDos[todoIndex]
+            todo.apply {
+                this.isComplete = isComplete
+                this.taskId = it[taskIndex].uid
+            }
+            localModel.updateTodo(todo) {
+                loadData()
+            }
+        }
     }
 
-    override fun retrieveTask(): List<Task> {
-        TODO("Not yet implemented")
+    override fun onTaskDeleted(taskIndex: Int) {
+        _taskListLiveData.value?.let {
+            localModel.deleteTask(it[taskIndex]) {
+                loadData()
+            }
+        }
     }
-
-    override fun getFakeData(): MutableList<Task> = mutableListOf(Task("Test Module Task",
-        mutableListOf(ToDo("wadidaw"))))
-
 }

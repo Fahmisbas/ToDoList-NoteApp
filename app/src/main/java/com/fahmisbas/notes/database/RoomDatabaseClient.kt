@@ -12,6 +12,9 @@ const val DB_NAME = "local-db"
 @Database(version = DATABASE_SCHEMA_VERSION, entities = [TaskEntity::class, ToDo::class,Tag::class, Note::class])
 abstract class RoomDatabaseClient : RoomDatabase() {
 
+    abstract fun noteDAO() : NoteDAO
+    abstract fun taskDao() : TaskDAO
+
     companion object{
         private var instance : RoomDatabaseClient? = null
 
@@ -23,7 +26,9 @@ abstract class RoomDatabaseClient : RoomDatabase() {
         }
 
         private fun createDatabase(context : Context) : RoomDatabaseClient {
-            return Room.databaseBuilder(context,RoomDatabaseClient::class.java, DB_NAME).build()
+            return Room.databaseBuilder(context,RoomDatabaseClient::class.java, DB_NAME)
+                .allowMainThreadQueries()
+                .build()
         }
     }
 }
