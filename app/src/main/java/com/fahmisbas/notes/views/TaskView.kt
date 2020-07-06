@@ -17,13 +17,27 @@ class TaskView @JvmOverloads constructor(
     lateinit var task: Task
 
     fun initView(task: Task, toDoCheckCallback : (Int,Boolean) -> Unit,deleteCallback : () -> Unit) {
+        resetChildViews()
         this.task = task
+
+        initTaskLine(deleteCallback)
+        addChildView(toDoCheckCallback)
+
+    }
+
+    private fun resetChildViews() {
+        todoContainer.removeAllViewsInLayout()
+    }
+
+    private fun initTaskLine(deleteCallback : () -> Unit) {
         titleView.text = task.title
 
         imageButton.setOnClickListener {
             deleteCallback.invoke()
         }
+    }
 
+    private fun addChildView(toDoCheckCallback : (Int,Boolean) -> Unit) {
         task.toDos.forEachIndexed { toDoIndex, toDo ->
             val todoView = (LayoutInflater.from(context).inflate(R.layout.view_todo, todoContainer, false) as TodoView).apply {
                 initViews(toDo) {isChecked ->

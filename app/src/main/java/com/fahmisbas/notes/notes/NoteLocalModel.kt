@@ -4,37 +4,55 @@ import android.util.Log
 import com.fahmisbas.notes.application.NoteApplication
 import com.fahmisbas.notes.database.RoomDatabaseClient
 import com.fahmisbas.notes.models.Note
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.math.log
+
+const val TIMEOUT_DURATION_MILIS = 3000L
 
 class NoteLocalModel @Inject constructor() : INoteModel {
 
     private var databaseClient: RoomDatabaseClient = RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
 
-    override fun getFakeData() : MutableList<Note> = retrieveNotes().toMutableList()
-//        return mutableListOf(
-////            Note(description = "Test 1"),
-////            Note(description ="Test 2"),
-////            Note(description ="Test 3"),
-////            Note(description ="Test 4")
-//        )
-
+    private fun performOperationWithTimeout(function: () -> Unit, callback: SuccessCallbak) {
+        GlobalScope.launch {
+            val job = async {
+                try {
+                    withTimeout(TIMEOUT_DURATION_MILIS) {
+                        function.invoke()
+                    }
+                } catch (e: Exception) {
+                    callback.invoke(false)
+                }
+            }
+            job.await()
+            callback.invoke(true)
+        }
+    }
 
     override fun addNote(note: Note, callback: SuccessCallbak) {
-        databaseClient.noteDAO().addNote(note)
-        callback.invoke(true)
+        performOperationWithTimeout({ databaseClient.noteDAO().addNote(note) },callback)
     }
 
     override fun updateNote(note: Note, callback: SuccessCallbak) {
-        databaseClient.noteDAO().updateNote(note)
-        callback.invoke(true)
+        performOperationWithTimeout({ databaseClient.noteDAO().updateNote(note) }, callback)
+
     }
 
     override fun deleteNote(note: Note, callback: SuccessCallbak) {
-        databaseClient.noteDAO().deleteNote(note)
-        callback.invoke(true)
+        performOperationWithTimeout({ databaseClient.noteDAO().deleteNote(note) }, callback)
     }
 
-    override fun retrieveNotes(): List<Note> = databaseClient.noteDAO().retrieveNotes()
+    override fun retrieveNotes(callback: (List<Note>?) -> Unit) {
+        GlobalScope.launch {
+
+            val job = async {
+                withTimeoutOrNull(TIMEOUT_DURATION_MILIS) {
+                    databaseClient.noteDAO().retrieveNotes()
+                }
+            }
+            callback.invoke(job.await())
+        }
+    }
 
 }
