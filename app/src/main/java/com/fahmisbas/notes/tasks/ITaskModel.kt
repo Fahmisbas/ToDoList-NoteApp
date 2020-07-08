@@ -6,10 +6,9 @@ import com.fahmisbas.notes.models.ToDo
 
 typealias SuccessCallbak = (Boolean) -> Unit
 interface ITaskModel {
-    fun addTask(task : Task, callback : SuccessCallbak)
-    fun updateTask(task : Task, callback : SuccessCallbak)
-    fun updateTodo(toDo: ToDo,callback: SuccessCallbak)
-    fun deleteTask(task : Task, callback : SuccessCallbak)
-    fun retrieveTask() : List<Task>
-    fun getFakeData(): MutableList<Task>
+    suspend fun addTask(task : Task, callback : SuccessCallbak)
+    suspend fun updateTask(task : Task, callback : SuccessCallbak)
+    suspend fun updateTodo(toDo: ToDo,callback: SuccessCallbak)
+    suspend fun deleteTask(task : Task, callback : SuccessCallbak)
+    fun retrieveTask(callback : (List<Task>?) -> Unit)
 }

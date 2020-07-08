@@ -1,47 +1,78 @@
 package com.fahmisbas.notes.tasks
 
-import android.util.Log
 import com.fahmisbas.notes.application.NoteApplication
 import com.fahmisbas.notes.database.RoomDatabaseClient
 import com.fahmisbas.notes.models.Task
 import com.fahmisbas.notes.models.ToDo
+import com.fahmisbas.notes.notes.TIMEOUT_DURATION_MILIS
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class TaskLocalModel @Inject constructor() : ITaskModel{
+class TaskLocalModel @Inject constructor() : ITaskModel {
 
+    private var databaseClient: RoomDatabaseClient =
+        RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
 
-    private var databaseClient: RoomDatabaseClient = RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
-
-    override fun getFakeData(): MutableList<Task> = retrieveTask().toMutableList()
-
-    override fun addTask(task: Task, callback: SuccessCallbak) {
-        databaseClient.taskDao().addTask(task)
-        addTodosInTask(task)
+    private suspend fun performOperationWithTimeout(
+        function: () -> Unit,
+        callback: SuccessCallbak
+    ) {
+        val job = GlobalScope.async {
+            try {
+                withTimeout(TIMEOUT_DURATION_MILIS) {
+                    function.invoke()
+                }
+            } catch (e: Exception) {
+                callback.invoke(false)
+            }
+        }
+        job.await()
         callback.invoke(true)
     }
 
-    override fun updateTask(task: Task, callback: SuccessCallbak) {
-        databaseClient.taskDao().updateTask(task)
+    override suspend fun addTask(task: Task, callback: SuccessCallbak) {
+        val masterJob = GlobalScope.async {
+            //add task entity component
+            try {
+                databaseClient.taskDao().addTask(task)
+            } catch (e: Exception) {
+                callback.invoke(false)
+            }
+            // add todos list component
+            addTodosJob(task)
+        }
+        masterJob.await()
         callback.invoke(true)
+
     }
 
-    override fun updateTodo(toDo: ToDo, callback: SuccessCallbak) {
-        databaseClient.taskDao().updateTodo(toDo)
-        callback.invoke(true)
+    override suspend fun updateTask(task: Task, callback: SuccessCallbak) {
+        performOperationWithTimeout({ databaseClient.taskDao().updateTask(task) }, callback)
+
     }
 
-    override fun deleteTask(task: Task, callback: SuccessCallbak) {
-        databaseClient.taskDao().deleteTask(task)
-        callback.invoke(true)
+    override suspend fun updateTodo(toDo: ToDo, callback: SuccessCallbak) {
+        performOperationWithTimeout({ databaseClient.taskDao().updateTodo(toDo) }, callback)
     }
 
-    private fun addTodosInTask(task : Task) {
-        task.toDos.forEach {todo ->
-            databaseClient.taskDao().addTodo(todo)
+    override suspend fun deleteTask(task: Task, callback: SuccessCallbak) {
+        performOperationWithTimeout({ databaseClient.taskDao().deleteTask(task) }, callback)
+    }
+
+    override fun retrieveTask(callback: (List<Task>?) -> Unit) {
+        GlobalScope.launch {
+            val job = async {
+                withTimeoutOrNull(TIMEOUT_DURATION_MILIS) {
+                    databaseClient.taskDao().retrieveTask()
+                }
+            }
+            callback.invoke(job.await())
         }
     }
 
-    override fun retrieveTask(): List<Task> = databaseClient.taskDao().retrieveTask()
-
-
+    private fun addTodosJob(task: Task): Job = GlobalScope.async {
+        task.toDos.forEach {
+            databaseClient.taskDao().addTodo(it)
+        }
+    }
 }
