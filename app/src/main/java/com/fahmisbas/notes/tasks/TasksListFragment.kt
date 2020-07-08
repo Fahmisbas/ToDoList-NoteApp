@@ -8,12 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.fahmisbas.notes.R
-import com.fahmisbas.notes.models.Task
-import com.fahmisbas.notes.models.ToDo
-import kotlinx.android.synthetic.main.fragment_tasks_list.*
 
 class TasksListFragment : Fragment() {
 
@@ -59,6 +54,16 @@ class TasksListFragment : Fragment() {
         viewModel.taskListLiveData.observe(viewLifecycleOwner, Observer { taskList ->
             contentView.updateList(taskList)
         })
+
+        viewModel.stateChangeLiveData.observe(viewLifecycleOwner, Observer {itemState ->
+            when(itemState) {
+                is TaskViewModel.ItemState.ItemUpdated -> contentView.updateItem(
+                    itemState.newTask,itemState.indexInList,itemState.indexInView)
+                is TaskViewModel.ItemState.ItemDeleted -> contentView.deleteItem(
+                    itemState.indexInList, itemState.indexInView)
+            }
+        })
+
     }
 
     companion object {

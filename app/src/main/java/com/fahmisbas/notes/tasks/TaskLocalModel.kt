@@ -13,6 +13,7 @@ class TaskLocalModel @Inject constructor() : ITaskModel {
     private var databaseClient: RoomDatabaseClient =
         RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
 
+
     private suspend fun performOperationWithTimeout(
         function: () -> Unit,
         callback: SuccessCallbak
@@ -75,4 +76,5 @@ class TaskLocalModel @Inject constructor() : ITaskModel {
             databaseClient.taskDao().addTodo(it)
         }
     }
+
 }

@@ -19,10 +19,8 @@ class TaskView @JvmOverloads constructor(
     fun initView(task: Task, toDoCheckCallback : (Int,Boolean) -> Unit,deleteCallback : () -> Unit) {
         resetChildViews()
         this.task = task
-
         initTaskLine(deleteCallback)
         addChildView(toDoCheckCallback)
-
     }
 
     private fun resetChildViews() {
@@ -35,6 +33,12 @@ class TaskView @JvmOverloads constructor(
         imageButton.setOnClickListener {
             deleteCallback.invoke()
         }
+
+        if (isTaskComplete()) {
+            this@TaskView.titleView.setStrikeThrough()
+        } else {
+            this@TaskView.titleView.removeStrikeThrough()
+        }
     }
 
     private fun addChildView(toDoCheckCallback : (Int,Boolean) -> Unit) {
@@ -42,11 +46,6 @@ class TaskView @JvmOverloads constructor(
             val todoView = (LayoutInflater.from(context).inflate(R.layout.view_todo, todoContainer, false) as TodoView).apply {
                 initViews(toDo) {isChecked ->
                     toDoCheckCallback.invoke(toDoIndex,isChecked)
-                    if (isTaskComplete()) {
-                        this@TaskView.titleView.setStrikeThrough()
-                    } else {
-                        this@TaskView.titleView.removeStrikeThrough()
-                    }
                 }
             }
             todoContainer.addView(todoView)

@@ -109,12 +109,9 @@ class CreateTaskFragment : Fragment() {
                 val todoList: MutableList<ToDo> = mutableListOf()
                 for (i in 0 until containerView.childCount) {
                     if (i == 0) {
-                        taskField =
-                            containerView.getChildAt(i).taskEditText.editableText?.toString()
+                        taskField = containerView.getChildAt(i).taskEditText.editableText?.toString()
                     } else {
-                        if (!containerView.getChildAt(i).todoEditText.editableText?.toString()
-                                .isNullOrEmpty()
-                        ) {
+                        if (!containerView.getChildAt(i).todoEditText.editableText?.toString().isNullOrEmpty()) {
                             todoList.add(
                                 ToDo(description = containerView.getChildAt(i).todoEditText.editableText.toString())
                             )
